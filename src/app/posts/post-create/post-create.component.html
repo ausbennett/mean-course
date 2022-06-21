@@ -1,0 +1,30 @@
+
+<!--
+    
+    #... is angular way of referencing element, almost as a variable
+    [...] accesses the properties of the actual underlying HTML element via ng
+
+    TWO WAY BINDING
+    [(ngModel)]=" some ts property ", need to import FormsModule
+
+    form element + formModule, creates a js object in the bg (replaces 2-way binding in this scenario)
+
+    #postForm="ngForm", gives the postForm local reference access to all the data behind in ngForm
+-->
+
+<mat-card>
+    <form (submit)="onAddPost(postForm)" #postForm="ngForm">
+        <mat-form-field>
+            <input matInput ngModel name="title" type="text" placeholder="Post Title" required #title="ngModel">
+            <mat-error *ngIf="title.invalid">Post title required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <textarea matInput ngModel name="content" type="text" rows="4" placeholder="Post Body" required #content="ngModel"></textarea>
+            <mat-error *ngIf="content.invalid">Post content required</mat-error>
+        </mat-form-field>
+
+        <button mat-mini-fab color="primary" type="submit">Post</button>
+    </form>
+   
+</mat-card>

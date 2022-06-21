@@ -1,3 +1,7 @@
+//this gets executed first
+
+
+//for typescript stuff
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
@@ -8,5 +12,6 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
+//angular function that starts the angular framework.
+platformBrowserDynamic().bootstrapModule(AppModule) //bootstrap module fn "AppModule", is the module that gets started on bootup
   .catch(err => console.error(err));
