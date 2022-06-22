@@ -55,20 +55,22 @@ export class PostsService {
 
     addPost(title: string, content: string){
         const post: Post = {id: "", title: title, content: content};
-        this.http.post<{message: string}>('http://localhost:3000/api/posts', post).subscribe(
-            (resData) => {
-                console.log(resData.message);
+        this.http
+            .post<{message: string, postId: string}>('http://localhost:3000/api/posts', post)
+            .subscribe(resData => {
+                //from the app.post "save.then()" method, we pass info about the db created post id in the http response to assign to our frontend id post
+                const id = resData.postId;
+                post.id = id; //we overwrite the id
 
                 //we will only push to local if we actually have a successfult res from server by putting the below in this method
                 this.posts.push(post); //update posts
                 this.postsUpdated.next([...this.posts]); //send a fresh copy of the lists of posts
-            }
-        );
+            });
     }    
 
     deletePost(postId: string){
       this.http.delete("http://localhost:3000/api/posts/" + postId)
-        .subscribe( () => {
+        .subscribe( () => { //need to subscribe inorder to recieve a response
           // uses the js filter method on posts[], uses a function that if true keeps if false filters
           const updatedPosts = this.posts.filter( post => post.id !== postId);
           this.posts = updatedPosts;

@@ -38,7 +38,10 @@ const express = require('express');
 const Post = require('./models/post');
 const app = express(); 
 
-mongoose.connect("mongodb+srv://aus:XZWa83xz@cluster0.bvlfucv.mongodb.net/node-angular?retryWrites=true&w=majority")
+//mongodb://127.0.0.1:27017/node-angular?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.5.0
+//mongodb+srv://aus:XZWa83xz@cluster0.bvlfucv.mongodb.net/node-angular?retryWrites=true&w=majority
+
+mongoose.connect("mongodb://127.0.0.1:27017/node-angular?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.5.0")
     .then(() => {
         console.log('Connected to db');
     })
@@ -57,13 +60,16 @@ app.use((req,res, next) => {
 });
 
 app.post("/api/posts", (req, res, next) => {
-    //const post = req.body; //body field availble by body-parser package
     const post = new Post({
         title: req.body.title, //get the post title of json request
+        content: req.body.content
     });
-    post.save();
-    console.log(post);
-    res.status(201).json({message: 'Post added'});// status code for new resource is created
+    post.save().then(createdPost => {
+        res.status(201).json({
+            message: 'Post added successfully',
+            postId: createdPost._id
+        });// status code for new resource is created
+    });
 });
 
 //requests that are localhost:3000/api/posts will only reach here
@@ -83,8 +89,8 @@ app.get('/api/posts',(req,res,next) => {
 });
 
 // :id is a dyamic route 
-app.delete('/api/posts/:id', (req,res,next) => {
-    console.log(req.params.id);
+app.delete("/api/posts/:id", (req,res,next) => {
+    console.log(req.params.id); //req.params lets as access al the parameters from the request
     Post.deleteOne({_id: req.params.id}).then(result => {
         console.log(result);
         res.status(200).json({ message: "Post deleted!"}); // response to request
